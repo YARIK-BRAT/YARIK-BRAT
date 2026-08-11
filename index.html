@@ -392,6 +392,12 @@
         }
 
         /* ===== СЛАЙДЕР ===== */
+        .bottom-photo {
+    margin: 40px 0 28px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
         .slider-container {
             position: relative;
             width: 100%;
@@ -409,12 +415,13 @@
             width: 100%;
         }
         .slide {
-            width: 100%;
-            flex: 0 0 100%;
-            object-fit: cover;
-            height: 300px;
-            display: block;
-        }
+    flex: 0 0 100%;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+    flex-shrink: 0;
+}
         .slider-btn {
             position: absolute;
             top: 50%;
@@ -531,16 +538,17 @@
                 font-size: 0.85rem;
                 padding-top: 16px;
             }
-            .slider-container {
-                max-width: 100%;
-            }
-            .slide {
-                height: 200px;
-            }
-            .slider-btn {
-                font-size: 1.5rem;
-                padding: 0 8px;
-            }
+             .slider-container {
+        max-width: 100%;
+        border-radius: 32px;
+    }
+    .slide {
+        height: 250px;
+    }
+    .slider-btn {
+        font-size: 1.5rem;
+        padding: 0 8px;
+    }
             .details .time,
             .details .servings {
                 font-size: 0.85rem;
