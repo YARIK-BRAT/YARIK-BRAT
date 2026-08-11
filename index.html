@@ -459,6 +459,91 @@
                 font-size: 1.5rem;
             }
         }
+        /* ===== СЛАЙДЕР ===== */
+.bottom-photo {
+    margin: 40px 0 28px;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+.slider-container {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 48px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(0, 20, 40, 0.10);
+    border: 3px solid rgba(255,255,255,0.6);
+}
+.slider-images {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+.slide {
+    width: 100%;
+    flex-shrink: 0;
+    object-fit: cover;
+    height: 300px; /* можно регулировать */
+    display: block;
+}
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.3);
+    backdrop-filter: blur(4px);
+    border: none;
+    color: #1a2f3f;
+    font-size: 2rem;
+    padding: 0 12px;
+    cursor: pointer;
+    border-radius: 40px;
+    transition: 0.2s;
+    line-height: 2;
+    font-weight: 300;
+}
+.slider-btn:hover {
+    background: rgba(255,255,255,0.6);
+}
+.prev {
+    left: 10px;
+}
+.next {
+    right: 10px;
+}
+.dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 16px;
+}
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: 0.3s;
+}
+.dot.active {
+    background: #d95a7a;
+    border-color: #d95a7a;
+    transform: scale(1.2);
+}
+
+@media (max-width: 600px) {
+    .slider-container {
+        max-width: 100%;
+    }
+    .slide {
+        height: 200px;
+    }
+    .slider-btn {
+        font-size: 1.5rem;
+        padding: 0 8px;
+    }
+}
     </style>
 </head>
 <body>
@@ -617,11 +702,23 @@
         </div>
     </div>
 
-    <!-- ===== НИЖНЕЕ ФОТО ===== -->
-    <div class="bottom-photo">
-        <!-- ВАШЕ ФОТО: положите bottom.jpg в папку images -->
-        <img src="images/bottom.jpg" alt="Настроение">
+    <!-- ===== СЛАЙДЕР С ФОТОГРАФИЯМИ ===== -->
+<div class="bottom-photo">
+    <div class="slider-container">
+        <div class="slider-images" id="sliderImages">
+            <!-- Добавьте сюда столько фото, сколько нужно, с именами bottom1.jpg, bottom2.jpg, ... -->
+            <img src="images/bottom1.jpg" alt="Фото 1" class="slide">
+            <img src="images/bottom2.jpg" alt="Фото 2" class="slide">
+            <img src="images/bottom3.jpg" alt="Фото 3" class="slide">
+            <!-- при желании добавьте ещё -->
+        </div>
+        <button class="slider-btn prev" id="prevBtn">❮</button>
+        <button class="slider-btn next" id="nextBtn">❯</button>
     </div>
+    <div class="dots" id="dotsContainer">
+        <!-- точки будут созданы скриптом автоматически -->
+    </div>
+</div>
 
     <!-- ===== ПОЗДРАВЛЕНИЕ ===== -->
     <div class="section">
@@ -645,5 +742,68 @@ P.s. Ты можешь выбрать любой удобный для тебя 
     </div>
 
 </div>
+    <script>
+    // ===== СКРИПТ ДЛЯ СЛАЙДЕРА =====
+    const slider = document.getElementById('sliderImages');
+    const slides = slider.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentIndex = 0;
+    let autoSlideInterval;
+
+    // Создаём точки
+    const dotsContainer = document.getElementById('dotsContainer');
+    slides.forEach((_, index) => {
+        const dot = document.createElement('span');
+        dot.classList.add('dot');
+        if (index === 0) dot.classList.add('active');
+        dot.dataset.index = index;
+        dot.addEventListener('click', () => goToSlide(index));
+        dotsContainer.appendChild(dot);
+    });
+    const dots = dotsContainer.querySelectorAll('.dot');
+
+    function updateSlider() {
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentIndex);
+        });
+    }
+
+    function goToSlide(index) {
+        if (index < 0) index = totalSlides - 1;
+        else if (index >= totalSlides) index = 0;
+        currentIndex = index;
+        updateSlider();
+        resetAutoSlide();
+    }
+
+    function nextSlide() {
+        goToSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+        goToSlide(currentIndex - 1);
+    }
+
+    function resetAutoSlide() {
+        clearInterval(autoSlideInterval);
+        autoSlideInterval = setInterval(nextSlide, 5000); // смена каждые 5 секунд
+    }
+
+    // Кнопки
+    document.getElementById('prevBtn').addEventListener('click', prevSlide);
+    document.getElementById('nextBtn').addEventListener('click', nextSlide);
+
+    // Запускаем автопрокрутку
+    resetAutoSlide();
+
+    // Останавливаем автопрокрутку при наведении на слайдер
+    const sliderContainer = document.querySelector('.slider-container');
+    sliderContainer.addEventListener('mouseenter', () => clearInterval(autoSlideInterval));
+    sliderContainer.addEventListener('mouseleave', resetAutoSlide);
+
+    // Инициализация
+    updateSlider();
+</script>
 </body>
 </html>
