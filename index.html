@@ -468,22 +468,25 @@
 }
 .slider-container {
     position: relative;
+    width: 100%;
     max-width: 400px;
     margin: 0 auto;
     border-radius: 48px;
     overflow: hidden;
     box-shadow: 0 16px 48px rgba(0, 20, 40, 0.10);
     border: 3px solid rgba(255,255,255,0.6);
+    box-sizing: border-box; /* важно, чтобы padding не влиял */
 }
 .slider-images {
     display: flex;
     transition: transform 0.5s ease;
+    width: 100%;
 }
 .slide {
     width: 100%;
-    flex-shrink: 0;
+    flex: 0 0 100%; /* гарантирует, что слайд занимает ровно 100% ширины контейнера */
     object-fit: cover;
-    height: 300px; /* можно регулировать */
+    height: 300px;
     display: block;
 }
 .slider-btn {
@@ -501,6 +504,7 @@
     transition: 0.2s;
     line-height: 2;
     font-weight: 300;
+    z-index: 2;
 }
 .slider-btn:hover {
     background: rgba(255,255,255,0.6);
